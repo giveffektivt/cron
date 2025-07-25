@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO clearhaus_settlement(merchant_id, amount) VALUES($1, $2)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Numeric",
+        "Numeric"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "2228c8eef751bf6ee2b85e513825b44684e7c5f566495a5bd308e933cfabfb1e"
+}

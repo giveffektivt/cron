@@ -1,0 +1,5 @@
+.direnv
+.git
+.envrc
+release
+flake.*
