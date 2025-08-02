@@ -6,10 +6,10 @@ use std::time::Duration;
 
 use crate::helpers::parse_env;
 
+mod brevo;
 mod clearhaus;
-mod helpers;
-// mod crm;
 mod cron;
+mod helpers;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -29,7 +29,7 @@ async fn main() -> Result<()> {
     PrometheusBuilder::new().install()?;
 
     clearhaus::start(http.clone(), db.clone());
-    // crm::start(http.clone(), db.clone());
+    brevo::start(http.clone(), db.clone());
 
     std::panic::set_hook(Box::new(|_| {}));
     tokio::signal::ctrl_c().await?;
