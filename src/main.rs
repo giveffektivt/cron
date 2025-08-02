@@ -1,4 +1,5 @@
 use anyhow::Result;
+use metrics_exporter_prometheus::PrometheusBuilder;
 use reqwest::Client;
 use sqlx::PgPool;
 use std::time::Duration;
@@ -9,7 +10,6 @@ mod clearhaus;
 mod helpers;
 // mod crm;
 mod cron;
-mod metrics;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
         .tcp_keepalive(Duration::from_secs(30))
         .build()?;
 
-    prometheus_exporter::start("0.0.0.0:9090".parse()?)?;
+    PrometheusBuilder::new().install()?;
 
     clearhaus::start(http.clone(), db.clone());
     // crm::start(http.clone(), db.clone());
