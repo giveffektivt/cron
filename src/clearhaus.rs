@@ -1,6 +1,6 @@
 use crate::{
     cron::{CronJob, spawn_cron},
-    helpers::parse_env,
+    helpers::{healthy, parse_env},
 };
 use anyhow::{Result, anyhow};
 use chrono::{DateTime, Duration as Cd, Utc};
@@ -97,7 +97,7 @@ impl Task {
 
         if !r.status().is_success() {
             return Err(anyhow!(
-                "settlements status {} body {}",
+                "Error fetching settlements: {} {}",
                 r.status(),
                 r.text().await?
             ));
@@ -140,19 +140,6 @@ impl Task {
 
         Ok(())
     }
-
-    async fn healthy(&self) -> Result<()> {
-        log::trace!("Reporting health");
-        let h = self.http.post(&self.health_url).send().await?;
-        if !h.status().is_success() {
-            return Err(anyhow!(
-                "Error reporting health: {} {}",
-                h.status(),
-                h.text().await?
-            ));
-        }
-        Ok(())
-    }
 }
 
 impl CronJob for Task {
@@ -160,7 +147,8 @@ impl CronJob for Task {
         async move {
             let data = self.fetch().await?;
             self.process(data).await?;
-            self.healthy().await
+            healthy(&self.http, &self.health_url).await;
+            Ok(())
         }
         .boxed()
     }

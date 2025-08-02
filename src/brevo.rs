@@ -1,6 +1,6 @@
 use crate::{
     cron::{CronJob, spawn_cron},
-    helpers::parse_env,
+    helpers::{healthy, parse_env},
 };
 use anyhow::{Context, Result, anyhow};
 use chrono::{DateTime, Utc};
@@ -177,27 +177,12 @@ impl Task {
             .send()
             .await?;
 
-        if !response.status().is_success() {
-            return Err(anyhow!(
-                "Error uploading to Brevo {}: {}",
-                response.status(),
-                response.text().await?
-            ));
+        let status = response.status();
+        let response = response.text().await.unwrap_or("<no response>".to_string());
+        if !status.is_success() {
+            return Err(anyhow!("Error uploading to Brevo {status}: {response}",));
         }
 
-        Ok(())
-    }
-
-    async fn healthy(&self) -> Result<()> {
-        log::trace!("Reporting health");
-        let h = self.http.post(&self.health_url).send().await?;
-        if !h.status().is_success() {
-            return Err(anyhow!(
-                "Error reporting health: {} {}",
-                h.status(),
-                h.text().await?
-            ));
-        }
         Ok(())
     }
 }
@@ -207,7 +192,8 @@ impl CronJob for Task {
         async move {
             let data = self.payload().await?;
             self.upload(data).await?;
-            self.healthy().await
+            healthy(&self.http, &self.health_url).await;
+            Ok(())
         }
         .boxed()
     }
