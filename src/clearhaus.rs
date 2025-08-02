@@ -147,7 +147,7 @@ impl CronJob for Task {
         async move {
             let data = self.fetch().await?;
             self.process(data).await?;
-            healthy(&self.http, &self.health_url).await;
+            healthy(&self.http, &self.health_url, "clearhaus").await;
             Ok(())
         }
         .boxed()

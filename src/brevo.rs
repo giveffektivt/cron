@@ -192,7 +192,7 @@ impl CronJob for Task {
         async move {
             let data = self.payload().await?;
             self.upload(data).await?;
-            healthy(&self.http, &self.health_url).await;
+            healthy(&self.http, &self.health_url, "brevo").await;
             Ok(())
         }
         .boxed()
