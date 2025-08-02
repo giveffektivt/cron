@@ -13,7 +13,7 @@ pub trait CronJob: Send + 'static {
 }
 
 pub fn spawn_cron<T: CronJob>(name: &'static str, every: Duration, mut job: T) -> JoinHandle<()> {
-    let hard_timeout = Duration::from_secs(60);
+    let hard_timeout = Duration::from_secs(2 * 60);
 
     tokio::spawn(async move {
         let mut ticker = interval(every);

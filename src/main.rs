@@ -21,9 +21,7 @@ async fn main() -> Result<()> {
     let db = PgPool::connect(&parse_env("DATABASE_URL")?).await?;
     let http = Client::builder()
         .use_rustls_tls()
-        .timeout(Duration::from_secs(30))
-        .connect_timeout(Duration::from_secs(10))
-        .tcp_keepalive(Duration::from_secs(30))
+        .timeout(Duration::from_secs(60))
         .build()?;
 
     PrometheusBuilder::new().install()?;
