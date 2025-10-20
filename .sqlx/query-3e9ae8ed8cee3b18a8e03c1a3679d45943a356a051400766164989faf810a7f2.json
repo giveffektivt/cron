@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n                select\n                    email,\n                    registered_at,\n                    name,\n                    cvr,\n                    age,\n                    total_donated,\n                    donations_count,\n                    last_donated_amount,\n                    last_donated_method::text,\n                    last_donated_frequency::text,\n                    last_donation_tax_deductible,\n                    last_donation_cancelled,\n                    last_donated_at,\n                    first_membership_at,\n                    first_donation_at,\n                    first_monthly_donation_at,\n                    is_member,\n                    has_gavebrev,\n                    vitamin_a_amount,\n                    vitamin_a_units,\n                    vaccinations_amount,\n                    vaccinations_units,\n                    bednets_amount,\n                    bednets_units,\n                    malaria_medicine_amount,\n                    malaria_medicine_units,\n                    direct_transfer_amount,\n                    direct_transfer_units,\n                    deworming_amount,\n                    deworming_units,\n                    lives,\n                    expired_donation_id::text,\n                    expired_donation_at,\n                    expired_membership_id::text,\n                    expired_membership_at\n                from\n                    crm_export\n                ",
+  "query": "\n                select\n                    email,\n                    registered_at,\n                    name,\n                    cvr,\n                    age,\n                    total_donated,\n                    donations_count,\n                    last_donated_amount,\n                    last_donated_method::text,\n                    last_donated_frequency::text,\n                    last_donation_tax_deductible,\n                    last_donation_cancelled,\n                    last_donated_at,\n                    total_donated_this_year,\n                    deductible_potential_this_year,\n                    first_membership_at,\n                    first_donation_at,\n                    first_monthly_donation_at,\n                    is_member,\n                    has_gavebrev,\n                    vitamin_a_amount,\n                    vitamin_a_units,\n                    vaccinations_amount,\n                    vaccinations_units,\n                    bednets_amount,\n                    bednets_units,\n                    malaria_medicine_amount,\n                    malaria_medicine_units,\n                    direct_transfer_amount,\n                    direct_transfer_units,\n                    deworming_amount,\n                    deworming_units,\n                    lives,\n                    expired_donation_id::text,\n                    expired_donation_at,\n                    expired_membership_id::text,\n                    expired_membership_at\n                from\n                    crm_export\n                ",
   "describe": {
     "columns": [
       {
@@ -70,111 +70,121 @@
       },
       {
         "ordinal": 13,
+        "name": "total_donated_this_year",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 14,
+        "name": "deductible_potential_this_year",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 15,
         "name": "first_membership_at",
         "type_info": "Timestamptz"
       },
       {
-        "ordinal": 14,
+        "ordinal": 16,
         "name": "first_donation_at",
         "type_info": "Timestamptz"
       },
       {
-        "ordinal": 15,
+        "ordinal": 17,
         "name": "first_monthly_donation_at",
         "type_info": "Timestamptz"
       },
       {
-        "ordinal": 16,
+        "ordinal": 18,
         "name": "is_member",
         "type_info": "Bool"
       },
       {
-        "ordinal": 17,
+        "ordinal": 19,
         "name": "has_gavebrev",
         "type_info": "Bool"
       },
       {
-        "ordinal": 18,
+        "ordinal": 20,
         "name": "vitamin_a_amount",
         "type_info": "Numeric"
       },
       {
-        "ordinal": 19,
+        "ordinal": 21,
         "name": "vitamin_a_units",
         "type_info": "Numeric"
       },
       {
-        "ordinal": 20,
+        "ordinal": 22,
         "name": "vaccinations_amount",
         "type_info": "Numeric"
       },
       {
-        "ordinal": 21,
+        "ordinal": 23,
         "name": "vaccinations_units",
         "type_info": "Numeric"
       },
       {
-        "ordinal": 22,
+        "ordinal": 24,
         "name": "bednets_amount",
         "type_info": "Numeric"
       },
       {
-        "ordinal": 23,
+        "ordinal": 25,
         "name": "bednets_units",
         "type_info": "Numeric"
       },
       {
-        "ordinal": 24,
+        "ordinal": 26,
         "name": "malaria_medicine_amount",
         "type_info": "Numeric"
       },
       {
-        "ordinal": 25,
+        "ordinal": 27,
         "name": "malaria_medicine_units",
         "type_info": "Numeric"
       },
       {
-        "ordinal": 26,
+        "ordinal": 28,
         "name": "direct_transfer_amount",
         "type_info": "Numeric"
       },
       {
-        "ordinal": 27,
+        "ordinal": 29,
         "name": "direct_transfer_units",
         "type_info": "Numeric"
       },
       {
-        "ordinal": 28,
+        "ordinal": 30,
         "name": "deworming_amount",
         "type_info": "Numeric"
       },
       {
-        "ordinal": 29,
+        "ordinal": 31,
         "name": "deworming_units",
         "type_info": "Numeric"
       },
       {
-        "ordinal": 30,
+        "ordinal": 32,
         "name": "lives",
         "type_info": "Numeric"
       },
       {
-        "ordinal": 31,
+        "ordinal": 33,
         "name": "expired_donation_id",
         "type_info": "Text"
       },
       {
-        "ordinal": 32,
+        "ordinal": 34,
         "name": "expired_donation_at",
         "type_info": "Timestamptz"
       },
       {
-        "ordinal": 33,
+        "ordinal": 35,
         "name": "expired_membership_id",
         "type_info": "Text"
       },
       {
-        "ordinal": 34,
+        "ordinal": 36,
         "name": "expired_membership_at",
         "type_info": "Timestamptz"
       }
@@ -214,11 +224,13 @@
       true,
       true,
       true,
+      true,
+      true,
       null,
       true,
       null,
       true
     ]
   },
-  "hash": "4be666066f3a7642cb7d656c65609cbdb527ef684a0c831966dec4ac8864f933"
+  "hash": "3e9ae8ed8cee3b18a8e03c1a3679d45943a356a051400766164989faf810a7f2"
 }
