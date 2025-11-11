@@ -3,12 +3,12 @@ use crate::{
     helpers::{healthy, parse_env},
 };
 use anyhow::{Result, anyhow};
-use chrono::{DateTime, Duration as Cd, Utc};
+use chrono::{DateTime, Duration as Cd, NaiveDate, Utc};
 use futures::{FutureExt, future::BoxFuture};
 use reqwest::Client;
 use serde_json::Value;
 use sqlx::{PgPool, query, types::BigDecimal};
-use std::time::Duration;
+use std::{collections::HashMap, time::Duration};
 
 pub fn start(http: Client, db: PgPool) {
     match parse_env("CLEARHAUS_INTERVAL_SECONDS").and_then(|v| v.parse().map_err(Into::into)) {
@@ -87,10 +87,7 @@ impl Task {
         log::trace!("Fetching settlements");
         let r = self
             .http
-            .get(format!(
-                "{}/settlements?query=settled%3Afalse",
-                self.base_url
-            ))
+            .get(format!("{}/settlements", self.base_url))
             .bearer_auth(&self.token)
             .send()
             .await?;
@@ -108,12 +105,26 @@ impl Task {
 
     async fn process(&self, settlements: Value) -> Result<()> {
         log::trace!("Processing response");
+        let today = Utc::now().date_naive();
+        let mut merchant_totals: HashMap<i32, i64> = HashMap::new();
+
         for s in settlements["_embedded"]["ch:settlements"]
             .as_array()
             .ok_or(anyhow!(
                 "Error parsing settlements array from {settlements}"
             ))?
         {
+            let settled = s["settled"].as_bool().unwrap_or(false);
+            let payout_date = s["payout"]["date"]
+                .as_str()
+                .and_then(|d| NaiveDate::parse_from_str(d, "%Y-%m-%d").ok());
+
+            let should_include = !settled || payout_date.is_some_and(|d| d > today);
+
+            if !should_include {
+                continue;
+            }
+
             let merchant_id = s["_embedded"]["ch:account"]["merchant_id"]
                 .as_str()
                 .ok_or(anyhow!("Error parsing merchant ID from {s}"))?
@@ -123,6 +134,10 @@ impl Task {
                 .as_i64()
                 .ok_or(anyhow!("Error parsing net amount from {s}"))?;
 
+            *merchant_totals.entry(merchant_id).or_insert(0) += amount;
+        }
+
+        for (merchant_id, amount) in merchant_totals {
             match query!(
                 "INSERT INTO clearhaus_settlement(merchant_id, amount) VALUES($1, $2)",
                 BigDecimal::from(merchant_id),
