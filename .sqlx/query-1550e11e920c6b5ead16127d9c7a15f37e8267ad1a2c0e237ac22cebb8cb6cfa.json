@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n                select\n                    email,\n                    registered_at,\n                    name,\n                    cvr,\n                    age,\n                    total_donated,\n                    donations_count,\n                    last_donated_amount,\n                    last_donated_method::text,\n                    last_donated_frequency::text,\n                    last_donation_tax_deductible,\n                    last_donation_cancelled,\n                    last_donated_at,\n                    total_donated_this_year,\n                    deductible_potential_this_year,\n                    first_membership_at,\n                    first_donation_at,\n                    first_monthly_donation_at,\n                    is_member,\n                    has_gavebrev,\n                    vitamin_a_amount,\n                    vitamin_a_units,\n                    vaccinations_amount,\n                    vaccinations_units,\n                    bednets_amount,\n                    bednets_units,\n                    malaria_medicine_amount,\n                    malaria_medicine_units,\n                    direct_transfer_amount,\n                    direct_transfer_units,\n                    deworming_amount,\n                    deworming_units,\n                    lives,\n                    expired_donation_id::text,\n                    expired_donation_at,\n                    expired_membership_id::text,\n                    expired_membership_at\n                from\n                    crm_export\n                ",
+  "query": "\n                select\n                    email,\n                    registered_at,\n                    name,\n                    cvr,\n                    age,\n                    total_donated,\n                    donations_count,\n                    last_donated_amount,\n                    last_donated_method::text,\n                    last_donated_frequency::text,\n                    last_donation_tax_deductible,\n                    last_donation_cancelled,\n                    last_donated_at,\n                    total_donated_this_year,\n                    deductible_potential_this_year,\n                    first_membership_at,\n                    first_donation_at,\n                    first_monthly_donation_at,\n                    is_member,\n                    has_gavebrev,\n                    vitamin_a_amount,\n                    vitamin_a_units,\n                    vaccinations_amount,\n                    vaccinations_units,\n                    bednets_amount,\n                    bednets_units,\n                    malaria_medicine_amount,\n                    malaria_medicine_units,\n                    direct_transfer_amount,\n                    direct_transfer_units,\n                    deworming_amount,\n                    deworming_units,\n                    lives,\n                    expired_donation_id::text,\n                    expired_donation_at,\n                    expired_membership_id::text,\n                    expired_membership_at,\n                    acquisition\n                from\n                    crm_export\n                ",
   "describe": {
     "columns": [
       {
@@ -187,6 +187,11 @@
         "ordinal": 36,
         "name": "expired_membership_at",
         "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 37,
+        "name": "acquisition",
+        "type_info": "Text"
       }
     ],
     "parameters": {
@@ -229,8 +234,9 @@
       null,
       true,
       null,
+      true,
       true
     ]
   },
-  "hash": "3e9ae8ed8cee3b18a8e03c1a3679d45943a356a051400766164989faf810a7f2"
+  "hash": "1550e11e920c6b5ead16127d9c7a15f37e8267ad1a2c0e237ac22cebb8cb6cfa"
 }

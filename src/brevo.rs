@@ -93,7 +93,8 @@ impl Task {
                     expired_donation_id::text,
                     expired_donation_at,
                     expired_membership_id::text,
-                    expired_membership_at
+                    expired_membership_at,
+                    acquisition
                 from
                     crm_export
                 "
@@ -142,6 +143,7 @@ impl Task {
                     "DONATIONENS_UDLOEBSDATO": to_date(entry.expired_donation_at),
                     "UDLOEBET_MEDLEMSKABSLINK": to_link(entry.expired_membership_id),
                     "MEDLEMSKABETS_UDLOEBSDATO": to_date(entry.expired_membership_at),
+                    "INDGANGSKILDE": entry.acquisition,
                 });
 
                 if let Some(name) = entry.name {
