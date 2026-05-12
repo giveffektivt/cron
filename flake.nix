@@ -21,7 +21,7 @@
           buildInputs = libs;
         };
         devShell = with pkgs; mkShell {
-          buildInputs = [ cargo rustc rustfmt pre-commit rustPackages.clippy pkg-config ] ++ libs;
+          buildInputs = [ sqlx-cli cargo rustc rustfmt pre-commit rustPackages.clippy pkg-config ] ++ libs;
           RUST_SRC_PATH = rustPlatform.rustLibSrc;
         };
       }
